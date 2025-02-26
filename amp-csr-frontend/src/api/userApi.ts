@@ -1,8 +1,9 @@
 import api from "./axiosInstance";
 
 export const fetchUsers = async () => {
-    const response = await api.get("/users");
-    return response.data;
+    const response = await fetch('/users');
+    const users = await response.json();
+    return users;
 };
 
 export const createUser = async (user: object) => {
