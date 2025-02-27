@@ -1,9 +1,14 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { FaMagnifyingGlass, FaPenToSquare, FaSquarePlus } from "react-icons/fa6";
+import {
+  FaMagnifyingGlass,
+  FaPenToSquare,
+  FaSquarePlus,
+} from "react-icons/fa6";
 import EditUserModal from "./EditUserModal";
 import EditSubscriptionModal from "./EditSubscriptionModal";
-import { updateUser, updateUserSubscriptions } from "../api/userApi";
+import AddSubscriptionModal from "./AddSubscriptionModal";
+import { addUserSubscription, updateUser, updateUserSubscriptions } from "../api/userApi";
 
 export interface VehicleSubscription {
   vehicleId: string;
@@ -34,10 +39,14 @@ const ViewUsers = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [selectedSubscriptions, setSelectedSubscriptions] = useState<VehicleSubscription[] | null>(null);
+  const [selectedSubscriptions, setSelectedSubscriptions] = useState<
+    VehicleSubscription[] | null
+  >(null);
 
   const [isSubscriptionModalOpen, setSubscriptionModalOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isAddSubscriptionModalOpen, setAddSubscriptionModalOpen] = useState(
+    false);
 
   useEffect(() => {
     // Fetching all users from backend
@@ -77,12 +86,20 @@ const ViewUsers = () => {
     setModalOpen(true);
   };
 
-  const handleEditSubscription = (user: User, subscriptions: VehicleSubscription[]) => {
+  const handleEditSubscription = (
+    user: User,
+    subscriptions: VehicleSubscription[]
+  ) => {
     setSelectedSubscriptions(subscriptions);
     //console.log("Selected Subscriptions:", subscriptions);
     setSelectedUser(user);
     setSubscriptionModalOpen(true);
   };
+
+  const handleAddClick = (user: User) => {
+    setAddSubscriptionModalOpen(true);
+    setSelectedUser(user);
+  }
 
   const handleSave = async (updatedUser: {
     name: string;
@@ -117,28 +134,33 @@ const ViewUsers = () => {
     }
   };
 
-  const handleSubscriptionSave = async (updatedSubscriptions: { VehicleSubscriptions: VehicleSubscription[] }) => {
-    if (!selectedUser){
-        console.log("No user selected");
-        return;
+  const handleSubscriptionSave = async (updatedSubscriptions: {
+    VehicleSubscriptions: VehicleSubscription[];
+  }) => {
+    if (!selectedUser) {
+      console.log("No user selected");
+      return;
     }
 
-    console.log("Updated subs",updatedSubscriptions);
-  
+    console.log("Updated subs", updatedSubscriptions);
+
     try {
       const subscriptionsArray = updatedSubscriptions.VehicleSubscriptions;
       console.log("Sending to API:", subscriptionsArray);
-      const updatedData = await updateUserSubscriptions(selectedUser._id, subscriptionsArray);
-  
+      const updatedData = await updateUserSubscriptions(
+        selectedUser._id,
+        subscriptionsArray
+      );
+
       console.log("User subscriptions updated:", updatedData);
-  
+
       // Update the users state with the updated subscriptions
       setUsers((prevUsers) =>
         prevUsers.map((user) =>
           user._id === selectedUser._id ? { ...user, ...updatedData } : user
         )
       );
-  
+
       // Updates the filtered users if search is active
       setFilteredUsers((prevFilteredUsers) =>
         prevFilteredUsers.map((user) =>
@@ -149,6 +171,50 @@ const ViewUsers = () => {
       console.error("Error updating subscriptions:", error);
     }
   };
+
+  const handleAddSubscription = async (newSubscription: VehicleSubscription) => {
+    if (!selectedUser) {
+      console.log("No user selected");
+      return;
+    }
+  
+    const updatedSubscriptions = [
+      ...selectedUser.VehicleSubscriptions,
+      newSubscription, // Append the new subscription to the existing array
+    ];
+  
+    console.log("Updated subscriptions", updatedSubscriptions);
+  
+    try {
+      const updatedData = await addUserSubscription(
+        selectedUser._id,
+        newSubscription // Add just the new subscription here
+      );
+      console.log("User subscriptions updated:", updatedData);
+  
+      // Update the users state with the updated subscriptions
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user._id === selectedUser._id
+            ? { ...user, VehicleSubscriptions: updatedSubscriptions }
+            : user
+        )
+      );
+  
+      // Updates the filtered users if search is active
+      setFilteredUsers((prevFilteredUsers) =>
+        prevFilteredUsers.map((user) =>
+          user._id === selectedUser._id
+            ? { ...user, VehicleSubscriptions: updatedSubscriptions }
+            : user
+        )
+      );
+    } catch (error) {
+      console.error("Error updating subscriptions:", error);
+    }
+  };
+  
+  
 
   if (loading) {
     return <div>Loading...</div>;
@@ -174,7 +240,7 @@ const ViewUsers = () => {
           <FaMagnifyingGlass size={20} color="blue" />
         </button>
       </div>
-      <div className="grid grid-cols-1 lg:grid-col-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 lg:grid-col-2 xl:grid-cols-3 2xl:grid-cols-4">
         {filteredUsers.map((user) => (
           <div
             key={user._id}
@@ -200,18 +266,31 @@ const ViewUsers = () => {
               <div className="flex space-x-4 items-center">
                 <h4 className="text-lg">Vehicle Subscriptions</h4>
                 <div className="flex space-x-4 items-center">
-                <button title="Edit Subscription" onClick={() => handleEditSubscription(user,user.VehicleSubscriptions)} className="text-blue-900 hover:text-blue-800">
-                  <FaPenToSquare size={20} />
-                </button>
-                <button title="Add Subscription to User" onClick={() => handleEditSubscription(user,user.VehicleSubscriptions)} className="text-blue-900 hover:text-blue-800">
-                  <FaSquarePlus size={20} />
-                </button>
+                  <button
+                    title="Edit Subscription"
+                    onClick={() =>
+                      handleEditSubscription(user, user.VehicleSubscriptions)
+                    }
+                    className="text-blue-900 hover:text-blue-800"
+                  >
+                    <FaPenToSquare size={20} />
+                  </button>
+                  <button
+                    title="Add Subscription to User"
+                    onClick={() => handleAddClick(user)}  
+                    className="text-blue-900 hover:text-blue-800"
+                  >
+                    <FaSquarePlus size={20} />
+                  </button>
                 </div>
               </div>
               {user.VehicleSubscriptions &&
               user.VehicleSubscriptions.length > 0 ? (
                 user.VehicleSubscriptions.map((sub, index) => (
-                  <div key={index} className="bg-gray-100 p-4 rounded-xl mt-2 space-y-3">
+                  <div
+                    key={index}
+                    className="bg-gray-100 p-4 rounded-xl mt-4 space-y-3"
+                  >
                     <p>
                       <strong>Make:</strong> {sub.make}
                     </p>
@@ -263,6 +342,15 @@ const ViewUsers = () => {
           isOpen={isSubscriptionModalOpen}
           onClose={() => setSubscriptionModalOpen(false)}
           onSave={handleSubscriptionSave}
+        />
+      )}
+
+      {isAddSubscriptionModalOpen && (
+        <AddSubscriptionModal
+          //subscriptions={[]}
+          //isOpen={isAddSubscriptionModalOpen}
+          onClose={() => setAddSubscriptionModalOpen(false)}
+          onSave={handleAddSubscription}
         />
       )}
     </div>

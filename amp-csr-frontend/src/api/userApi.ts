@@ -34,3 +34,22 @@ export const updateUserSubscriptions = async (id: string, VehicleSubscriptions: 
         throw error;
     }
 };
+
+export const addUserSubscription = async (id: string, newSubscription: VehicleSubscription) => {
+    try {
+        // First, get the current subscriptions (assuming we can get this data from an API)
+        const userResponse = await api.get(`/users/${id}`);
+        const currentSubscriptions = userResponse.data.VehicleSubscriptions || [];
+
+        // Append the new subscription
+        const updatedSubscriptions = [...currentSubscriptions, newSubscription];
+
+        // Send the updated subscriptions list to the server
+        const response = await api.put(`/users/${id}`, { VehicleSubscriptions: updatedSubscriptions });
+        console.log("User subscriptions updated:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error adding subscription:", error);
+        throw error;
+    }
+};

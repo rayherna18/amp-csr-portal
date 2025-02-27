@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { VehicleSubscription } from "./ViewUsers";
-import { FaSquareMinus } from "react-icons/fa6";
 import { FaTrash } from "react-icons/fa";
 
 interface EditSubscriptionModalProps {
