@@ -1,6 +1,12 @@
 const Home = () => {
     return (
-        <div>
+        <div className="relative p-10 h-screen flex flex-col">
+          <img
+          src="src/assets/bubbles.webp"
+          alt="Bubbles Overlay"
+          className=" z-0 absolute left-0 w-full object-cover opacity-5 pointer-events-none select-none"
+        />
+        <div className="z-10 flex flex-col h-full justify-center mx-auto">
             <h1 className="font-bold text-8xl text-white">
             The Ultimate Portal For
           </h1>
@@ -21,6 +27,7 @@ const Home = () => {
             <button className="bg-green-600 text-white py-4 px-6 rounded hover:bg-green-700">
               <a href="https://insiten.com/">Visit Insiten</a>
             </button>
+          </div>
           </div>
         </div>
     )
