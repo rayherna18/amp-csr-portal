@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import {
+  FaChevronUp,
   FaMagnifyingGlass,
   FaPenToSquare,
   FaSquarePlus,
@@ -9,6 +10,7 @@ import EditUserModal from "./EditUserModal";
 import EditSubscriptionModal from "./EditSubscriptionModal";
 import AddSubscriptionModal from "./AddSubscriptionModal";
 import { addUserSubscription, updateUser, updateUserSubscriptions } from "../api/userApi";
+import { FaChevronDown } from "react-icons/fa";
 
 export interface VehicleSubscription {
   vehicleId: string;
@@ -47,6 +49,8 @@ const ViewUsers = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isAddSubscriptionModalOpen, setAddSubscriptionModalOpen] = useState(
     false);
+
+  const [expandedUserId, setExpandedUserId] = useState<string | null>(null);
 
   useEffect(() => {
     // Fetching all users from backend
@@ -213,6 +217,12 @@ const ViewUsers = () => {
       console.error("Error updating subscriptions:", error);
     }
   };
+
+  const handleToggleAccordion = (userId: string) => {
+    setExpandedUserId((prevExpandedUserId) =>
+      prevExpandedUserId === userId ? null : userId
+    );
+  };
   
   
 
@@ -224,7 +234,7 @@ const ViewUsers = () => {
     return <div>No users found.</div>;
   }
   return (
-    <div className="p-8">
+    <div className="p-8 h-screen overflow-y-auto">
       <div className="flex mb-6">
         <input
           type="text"
@@ -240,11 +250,11 @@ const ViewUsers = () => {
           <FaMagnifyingGlass size={20} color="blue" />
         </button>
       </div>
-      <div className="grid grid-cols-1 lg:grid-col-2 xl:grid-cols-3 2xl:grid-cols-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  gap-6 items-start">
         {filteredUsers.map((user) => (
           <div
             key={user._id}
-            className="bg-white p-6 rounded-2xl shadow-md w-[340px] min-h-[360px] md:w-[440px] md:min-h-[460px] flex flex-col"
+            className="bg-white p-6 rounded-2xl shadow-md w-full min-h-[300px] flex flex-col"
           >
             <div className="flex space-x-4 items-center">
               <h3 className="text-lg">User Information</h3>
@@ -256,11 +266,13 @@ const ViewUsers = () => {
                 <FaPenToSquare size={20} />
               </button>
             </div>
-            <p className="font-bold text-gray-700">{user.name}</p>
-            <p className="text-gray-600">{user.email}</p>
-            <p className="text-sm text-gray-500">
+            <div className="max-w-full">
+            <p className="font-bold text-gray-700 break-words">{user.name}</p>
+            <p className="text-gray-600 break-words">{user.email}</p>
+            <p className="text-sm text-gray-500 break-words">
               Phone: {user.phone || "N/A"}
             </p>
+            </div>
 
             <div className="mt-4">
               <div className="flex space-x-4 items-center">
@@ -284,48 +296,35 @@ const ViewUsers = () => {
                   </button>
                 </div>
               </div>
-              {user.VehicleSubscriptions &&
-              user.VehicleSubscriptions.length > 0 ? (
-                user.VehicleSubscriptions.map((sub, index) => (
-                  <div
-                    key={index}
-                    className="bg-gray-100 p-4 rounded-xl mt-4 space-y-3"
-                  >
-                    <p>
-                      <strong>Make:</strong> {sub.make}
-                    </p>
-                    <p>
-                      <strong>Model:</strong> {sub.model}
-                    </p>
-                    <p>
-                      <strong>Year:</strong> {sub.year}
-                    </p>
-                    <p>
-                      <strong>Subscription Type:</strong> {sub.subscriptionType}
-                    </p>
-                    <p>
-                      <strong>Status:</strong> {sub.status}
-                    </p>
-                    <p>
-                      <strong>Payment Status:</strong> {sub.paymentStatus}
-                    </p>
-                    <p>
-                      <strong>Start Date:</strong>{" "}
-                      {new Date(sub.startDate).toLocaleDateString()}
-                    </p>
-                    <p>
-                      <strong>End Date:</strong>{" "}
-                      {new Date(sub.endDate).toLocaleDateString()}
-                    </p>
-                  </div>
-                ))
-              ) : (
-                <p>No subscriptions available.</p>
+
+              <button onClick={() => handleToggleAccordion(user._id)} className="text-blue-900 hover:text-blue-800 mt-2 gap-2 items-center flex">
+              {user.VehicleSubscriptions.length} Subscriptions
+                {expandedUserId === user._id ? (
+                  <FaChevronUp size={20} />
+                ) : (
+                  <FaChevronDown size={20} />
+                )}
+              </button>
+              {expandedUserId === user._id && user.VehicleSubscriptions.length > 0 && (
+                <div className="mt-4 space-y-3">
+                  {user.VehicleSubscriptions.map((sub, index) => (
+                    <div key={index} className="bg-gray-100 p-4 rounded-xl">
+                      <p><strong>Make:</strong> {sub.make}</p>
+                      <p><strong>Model:</strong> {sub.model}</p>
+                      <p><strong>Year:</strong> {sub.year}</p>
+                      <p><strong>Subscription Type:</strong> {sub.subscriptionType}</p>
+                      <p><strong>Status:</strong> {sub.status}</p>
+                      <p><strong>Payment Status:</strong> {sub.paymentStatus}</p>
+                      <p><strong>Start Date:</strong> {new Date(sub.startDate).toLocaleDateString()}</p>
+                      <p><strong>End Date:</strong> {new Date(sub.endDate).toLocaleDateString()}</p>
+                    </div>
+                  ))}
+                </div>
               )}
-              {/* Edit Button */}
             </div>
           </div>
         ))}
+
       </div>
       {isModalOpen && selectedUser && (
         <EditUserModal
