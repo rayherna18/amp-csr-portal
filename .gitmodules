@@ -1,3 +1,6 @@
 [submodule "amp-csr-backend"]
 	path = amp-csr-backend
 	url = ../amp-csr-backend
+[submodule "amp-csr-frontend"]
+	path = amp-csr-frontend
+	url = ./amp-csr-frontend
