@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+@components {
+    .form-input{
+        @apply w-full mt-1 border-2 border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200;
+    }
+}
