@@ -9,7 +9,7 @@ import {
 import EditUserModal from "./EditUserModal";
 import EditSubscriptionModal from "./EditSubscriptionModal";
 import AddSubscriptionModal from "./AddSubscriptionModal";
-import { addUserSubscription, updateUser, updateUserSubscriptions } from "../api/userApi";
+import {updateUser, updateUserSubscriptions } from "../api/userApi";
 import { FaChevronDown } from "react-icons/fa";
 
 export interface VehicleSubscription {

@@ -34,7 +34,7 @@ export const updateUserSubscriptions = async (id: string, VehicleSubscriptions: 
         throw error;
     }
 };
-
+/*
 export const addUserSubscription = async (id: string, newSubscription: VehicleSubscription) => {
     try {
         // First, get the current subscriptions (assuming we can get this data from an API)
@@ -52,4 +52,4 @@ export const addUserSubscription = async (id: string, newSubscription: VehicleSu
         console.error("Error adding subscription:", error);
         throw error;
     }
-};
+}; */
