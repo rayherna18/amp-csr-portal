@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     proxy: {
-      '/users': 'http://localhost:3000', // Adjust this as needed, depending on where your backend is running
+      '/users': 'amp-csr-backend-hbklmk6t6-rayherna18s-projects.vercel.app', // Adjust this as needed, depending on where your backend is running
     },
   },
   
