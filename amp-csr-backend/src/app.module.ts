@@ -8,7 +8,7 @@ import { UsersModule } from './users/users.module';
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRootAsync({
       useFactory: async (configService: ConfigService) => {
-        const uri = configService.get<string>('MONGO_URI');
+        const uri = configService.get<string>('MONGODB_URI');
         return { uri };
       },
       inject: [ConfigService],
