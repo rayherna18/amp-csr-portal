@@ -1,4 +1,3 @@
-import { VehicleSubscription } from "../components/ViewUsers";
 import api from "./axiosInstance";
 
 export const fetchUsers = async () => {
