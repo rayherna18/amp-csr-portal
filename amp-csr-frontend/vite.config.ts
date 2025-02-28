@@ -6,9 +6,9 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
-    proxy: process.env.NODE_ENV === 'development' ? {
-      '/users': 'http://localhost:3000',
-    } : {},
+    proxy: {
+      '/users': 'http://localhost:3000', // Adjust this as needed, depending on where your backend is running
+    },
   },
   
 })
