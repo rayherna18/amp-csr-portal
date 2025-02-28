@@ -7,8 +7,11 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     proxy: {
-      '/users': process.env.VITE_BACKEND_URL || 'http://localhost:3000', 
+      '/users': {
+        target: process.env.VITE_BACKEND_URL || 'http://localhost:3000', 
+        changeOrigin: true,
+        secure: false,
+      },
     },
   },
-  
 })
