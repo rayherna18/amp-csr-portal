@@ -31,7 +31,7 @@ const Dashboard = () => {
       >
       <div className="p-4">
         <div className="mb-8 flex justify-center">
-          <img src="/src/assets/amp-logo.webp" alt="AMP Logo" className="w-56" />
+          <img src="../assets/amp-logo.webp" alt="AMP Logo" className="w-56" />
         </div>
 
         <ul>

@@ -2,7 +2,7 @@ const Home = () => {
     return (
         <div className="relative p-10 h-screen overflow-y-auto flex flex-col">
           <img
-          src="src/assets/bubbles.webp"
+          src="../assets/bubbles.webp"
           alt="Bubbles Overlay"
           className=" z-0 absolute left-0 w-full h-full md:h-auto object-cover opacity-5 pointer-events-none select-none"
         />
