@@ -13,7 +13,7 @@ import {updateUser, updateUserSubscriptions } from "../api/userApi";
 import { FaChevronDown } from "react-icons/fa";
 
 export interface VehicleSubscription {
-  vehicleId: string;
+  vehicleId?: string;
   make: string;
   model: string;
   year: number;
@@ -57,8 +57,8 @@ const ViewUsers = () => {
     // Fetching all users from backend
     const fetchUsers = async () => {
       try {
-        const response = await axios.get("/users");
-        // Ensure the response is an array before setting the state
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/users`);
+        
         if (Array.isArray(response.data)) {
           setUsers(response.data);
           setFilteredUsers(response.data); // Initially show all users
@@ -113,8 +113,6 @@ const ViewUsers = () => {
   }) => {
     if (!selectedUser) return;
 
-    console.log("User ID:", selectedUser._id);
-
     try {
       const updatedData = await updateUser(selectedUser._id, updatedUser);
       console.log("User updated:", updatedData);
@@ -133,7 +131,6 @@ const ViewUsers = () => {
         )
       );
 
-      // Ideally, update the user list in state here
     } catch (error) {
       console.error("Error updating user:", error);
     }
@@ -150,6 +147,7 @@ const ViewUsers = () => {
     try {
       const subscriptionsArray = updatedSubscriptions.VehicleSubscriptions;
       console.log("Sending to API:", subscriptionsArray);
+
       const updatedData = await updateUserSubscriptions(
         selectedUser._id,
         subscriptionsArray
@@ -187,12 +185,17 @@ const ViewUsers = () => {
   
   
     try {
+
+      const updatedData = await updateUserSubscriptions(
+        selectedUser._id,
+        updatedSubscriptions
+      );
   
       // Update the users state with the updated subscriptions
       setUsers((prevUsers) =>
         prevUsers.map((user) =>
           user._id === selectedUser._id
-            ? { ...user, VehicleSubscriptions: updatedSubscriptions }
+            ? { ...user, ...updatedData }
             : user
         )
       );
@@ -201,7 +204,7 @@ const ViewUsers = () => {
       setFilteredUsers((prevFilteredUsers) =>
         prevFilteredUsers.map((user) =>
           user._id === selectedUser._id
-            ? { ...user, VehicleSubscriptions: updatedSubscriptions }
+            ? { ...user, ...updatedData }
             : user
         )
       );

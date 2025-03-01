@@ -6,7 +6,7 @@ export const UserSchema = new Schema({
   phone: { type: String },
   VehicleSubscriptions: [
     {
-      vehicleId: { type: String, ref: 'Vehicle', required: true },
+      vehicleId: { type: String, ref: 'Vehicle'},
       make: { type: String, required: true },
       model: { type: String, required: true },
       year: { type: Number, required: true },

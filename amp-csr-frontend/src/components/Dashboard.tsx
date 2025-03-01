@@ -37,7 +37,7 @@ const Dashboard = () => {
         <ul>
           {[
             { path: "/", label: "Home", disabled: false },
-            { path: "/all-users", label: "View Users", disabled: false },
+            { path: "/users", label: "View Users", disabled: false },
             { path: "/subscriptions", label: "Subscription Tiers", disabled: true },
             { path: "/technologies", label: "Technologies", disabled: true },
           ].map(({ path, label, disabled }) => (

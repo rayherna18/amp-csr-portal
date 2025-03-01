@@ -114,6 +114,11 @@ const EditSubscriptionModal: React.FC<EditSubscriptionModalProps> = ({
   const handleSubmit = () => {
     if (!formData) return;
 
+    if (!formData.vehicleId) {
+      console.error("Vehicle ID is required");
+      return;
+    }
+
     // Preserve the rest of the subscriptions and only update the selected one
     const updatedSubscriptions = subscriptions.map((sub) =>
       sub.vehicleId === formData.vehicleId ? { ...formData } : sub

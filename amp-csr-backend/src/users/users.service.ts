@@ -64,13 +64,17 @@ export class UsersService {
           vehicleSub.startDate = updatedSub.startDate ?? vehicleSub.startDate;
           vehicleSub.endDate = updatedSub.endDate ?? vehicleSub.endDate;
 
-          // Reassign to force the update to the object (or use markModified)
-          existingUser.VehicleSubscriptions[vehicleSubIndex] = vehicleSub;
-        } else {
-          // Add new subscription if it doesn't exist
-          existingUser.VehicleSubscriptions.push(updatedSub);
-        }
-      });
+           // Reassign to force the update to the object (or use markModified)
+           existingUser.VehicleSubscriptions[vehicleSubIndex] = vehicleSub;
+          } else {
+            // Add new subscription if it doesn't exist
+            // Ensure vehicleId is included when adding a new subscription
+            if (!updatedSub.vehicleId) {
+              throw new Error('vehicleId is required when adding a new VehicleSubscription');
+            }
+            existingUser.VehicleSubscriptions.push(updatedSub);
+          }
+        });
 
       // Mark the subdocument array as modified (so it is saved correctly)
       existingUser.markModified('VehicleSubscriptions');

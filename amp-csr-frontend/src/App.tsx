@@ -13,7 +13,7 @@ function App() {
         <Route path="/" element={<Dashboard />}>
           {/* Nested routes for Dashboard */}
           <Route path="/" element={<Home />} />
-          <Route path="all-users" element={<ViewUsers />} />
+          <Route path="users" element={<ViewUsers />} />
           <Route path="subscriptions" element={<ViewSubscriptions />} />
           <Route path="technologies" element={<Technologies />} />
         </Route>

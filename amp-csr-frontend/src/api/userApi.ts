@@ -26,8 +26,12 @@ export const updateUser = async (id: string, user: Partial<object>) => {
 export const updateUserSubscriptions = async (id: string, VehicleSubscriptions: Partial<object>) => {
     try {
         console.log("Updating user subscriptions:", VehicleSubscriptions);
+        console.log("ID:", id);
+
         const response = await api.put(`/users/${id}`, { VehicleSubscriptions });
+
         console.log("User subscriptions updated:", response.data);
+
         return response.data;
     } catch (error) {
         console.error("Error updating user subscriptions:", error);
