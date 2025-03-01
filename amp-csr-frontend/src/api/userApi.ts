@@ -2,6 +2,7 @@ import api from "./axiosInstance";
 
 export const fetchUsers = async () => {
     const response = await fetch('/users');
+    console.log("Hey");
     const users = await response.json();
     return users;
 };
