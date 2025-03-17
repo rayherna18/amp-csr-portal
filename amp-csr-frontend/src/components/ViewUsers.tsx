@@ -57,7 +57,9 @@ const ViewUsers = () => {
     // Fetching all users from backend
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/users`);
+        const baseUrl = import.meta.env.VITE_BACKEND_URL ?? import.meta.env.VITE_API_BASE_URL;
+        console.log("Base URL:", baseUrl);
+        const response = await axios.get(`${baseUrl}/users`);
         
         if (Array.isArray(response.data)) {
           setUsers(response.data);
